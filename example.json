@@ -1,0 +1,64 @@
+{
+  "runSettings": {
+    "temperature": 1.0,
+    "model": "models/gemini-3-flash-preview",
+    "topP": 0.95,
+    "topK": 64,
+    "maxOutputTokens": 65536,
+    "safetySettings": [{
+      "category": "HARM_CATEGORY_HARASSMENT",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_HATE_SPEECH",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+      "threshold": "OFF"
+    }, {
+      "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+      "threshold": "OFF"
+    }],
+    "enableCodeExecution": false,
+    "enableSearchAsATool": false,
+    "enableBrowseAsATool": false,
+    "enableAutoFunctionResponse": false,
+    "outputResolution": "1K",
+    "thinkingLevel": "THINKING_HIGH"
+  },
+  "systemInstruction": {
+  },
+  "chunkedPrompt": {
+    "chunks": [
+      {
+      "text": "Привет",
+      "role": "user",
+      "tokenCount": 2
+    }, {
+      "text": "**Greeting and Offering Assistance**\n\nI\u0027ve registered the Russian greeting, \"Привет.\" My initial responses are formulated, including both a direct offer of assistance (\"Чем я могу тебе помочь?\") and a more general greeting (\"Здравствуйте! Как дела?\"). Ready for the next step.\n\n\n**Defining My Purpose**\n\nI\u0027ve clarified my core function: I am an AI designed to answer questions. This simple declaration provides a clear foundation for future interactions. My identity as an AI is established, and I\u0027ve positioned myself as a helpful resource, eager to be queried.\n\n\n",
+      "role": "model",
+      "isThought": true,
+      "parts": [{
+        "text": "**Greeting and Offering Assistance**\n\nI\u0027ve registered the Russian greeting, \"Привет.\" My initial responses are formulated, including both a direct offer of assistance (\"Чем я могу тебе помочь?\") and a more general greeting (\"Здравствуйте! Как дела?\"). Ready for the next step.\n\n\n",
+        "thought": true
+      }, {
+        "text": "**Defining My Purpose**\n\nI\u0027ve clarified my core function: I am an AI designed to answer questions. This simple declaration provides a clear foundation for future interactions. My identity as an AI is established, and I\u0027ve positioned myself as a helpful resource, eager to be queried.\n\n\n",
+        "thought": true
+      }]
+    }, {
+      "text": "Привет! Чем я могу вам помочь сегодня?",
+      "role": "model",
+      "finishReason": "STOP",
+      "tokenCount": 10,
+      "parts": [{
+        "text": "Привет! Чем я могу вам помочь сегодня?"
+      }, {
+        "text": "",
+        "thoughtSignature": "EuEECt4EAXLI2nyG0IV7d8CuzMOoMeo3OzycpYJZA0aJams1ZLIZtGV4CToXbtRibHMUPVDmIwdgqtCC8kUUPYlAEh+uRGVyXVB1VL2LZLEsmHl1F9hes8qtMlYPaSXGLloUDzfqmmd1WOF8taCzaNlWFMT3iW0GIguI5rnxorjJ0kQYzjejVIP87OL27N7oRqJqMG0Zs5HkXKWUZ/wtQ6kCzPTDQS3qAXgdibH/gQ1vcUdg8n+dvXI6+NPwzyIQxgGtussI3xLQkPFHCNPQUF+7ihx0wWLqaEXXn38tUNAu9KWiJA0AF1CgnKoysSIdjN81NT7NYnOmbNxOaVEEYzHZi52YTvTBN3LIWYOT7aEcnV1g8FAsSCWG057WySZCUItQJeodpt/MnkR2f6cN8Qt83jwWILLerB490pXLGijxHSPWsL6JJ2/mmqz3E3oprursSWjvjEAdTIXidOtK7bl4nlMq0z1kBHKXITONPe0Cw/LSR2xhq2Z52CE2MKTy0AQXQaoM7bg0mR9LTocQjNrOY9+zGhkXZShpw6n5Hqs331sFYlrezk1OhOm4GCjcki+4UH8P11rzP/uzap7WE8jJStyxhnQmdIZq2BgQLyRPJLTrqFQEgMLs0R2EPrVvqWfPs7H/tB4qeUz0X/1ISfrT6Rfks3pe9FwDBfh5z/tnA/vuyvyTpMUlgorAkdl0gYns92c3w61+PYuRAGfZFbCJirDGjmvuxysBPo5RR9B8dx4Hl81l2OdTAIIKeQzGX9DOPyWss0v+Q7EUwD2kUSjXs973N7YmLtSiAgg9v3uyfQDl"
+      }]
+    }],
+    "pendingInputs": [{
+      "text": "",
+      "role": "user"
+    }]
+  }
+}
