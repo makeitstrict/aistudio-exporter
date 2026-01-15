@@ -7,25 +7,33 @@ import (
 	"strings"
 )
 
-// ExportChunks reads input JSON file, extracts text chunks and saves them to output file.
-func ExportChunks(inputPath, outputPath string) error {
+// Writer defines the interface for exporting chunks.
+type Writer interface {
+	Write(root Root) error
+}
+
+// ExportChunks reads input JSON file and saves chunks using the provided writer.
+func ExportChunks(inputPath string, writer Writer) error {
+	root, err := readAndParse(inputPath)
+	if err != nil {
+		return err
+	}
+
+	return writer.Write(root)
+}
+
+func readAndParse(inputPath string) (Root, error) {
 	data, err := os.ReadFile(inputPath)
 	if err != nil {
-		return fmt.Errorf("error reading input file: %w", err)
+		return Root{}, fmt.Errorf("error reading input file: %w", err)
 	}
 
 	var root Root
 	if err := json.Unmarshal(data, &root); err != nil {
-		return fmt.Errorf("error parsing JSON: %w", err)
+		return Root{}, fmt.Errorf("error parsing JSON: %w", err)
 	}
 
-	outputContent := ProcessChunks(root)
-
-	if err := os.WriteFile(outputPath, []byte(outputContent), 0644); err != nil {
-		return fmt.Errorf("error writing to output file: %w", err)
-	}
-
-	return nil
+	return root, nil
 }
 
 // ProcessChunks filters chunks and joins their text.
