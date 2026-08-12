@@ -160,6 +160,14 @@ func TestTextWriter(t *testing.T) {
 	if string(result) != expected {
 		t.Errorf("Result = %q, want %q", string(result), expected)
 	}
+
+	info, err := os.Stat(outputPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0600 {
+		t.Errorf("Output permissions = %o, want 600", got)
+	}
 }
 
 func TestTextWriter_WriteError(t *testing.T) {
@@ -212,6 +220,14 @@ func TestSQLiteWriter(t *testing.T) {
 		t.Errorf("Expected 2 records, got %d", len(records))
 	}
 
+	info, err := os.Stat(dbPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := info.Mode().Perm(); got != 0600 {
+		t.Errorf("Database permissions = %o, want 600", got)
+	}
+
 	expectedTexts := []string{"Chunk 1", "Chunk 2"}
 	for i, record := range records {
 		if record.Text != expectedTexts[i] {
@@ -260,6 +276,25 @@ func TestExportChunks_InvalidJSON(t *testing.T) {
 	err = ExportChunks(tmpInput.Name(), writer)
 	if err == nil {
 		t.Error("Expected error when parsing invalid JSON, got nil")
+	}
+}
+
+func TestExportChunks_RejectsOversizedInput(t *testing.T) {
+	inputPath := filepath.Join(t.TempDir(), "oversized.json")
+	file, err := os.Create(inputPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Truncate(maxInputSize + 1); err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	writer := &TextWriter{OutputPath: filepath.Join(t.TempDir(), "output.txt")}
+	if err := ExportChunks(inputPath, writer); err == nil {
+		t.Fatal("Expected oversized input to be rejected")
 	}
 }
 
