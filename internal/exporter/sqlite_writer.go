@@ -2,6 +2,7 @@ package exporter
 
 import (
 	"fmt"
+	"os"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -20,10 +21,27 @@ type SQLiteWriter struct {
 
 // Write writes the chunks to a SQLite database.
 func (w *SQLiteWriter) Write(root Root) error {
+	file, err := os.OpenFile(w.DBPath, os.O_RDWR|os.O_CREATE, 0600)
+	if err != nil {
+		return fmt.Errorf("error creating database: %w", err)
+	}
+	if err := file.Chmod(0600); err != nil {
+		file.Close()
+		return fmt.Errorf("error securing database: %w", err)
+	}
+	if err := file.Close(); err != nil {
+		return fmt.Errorf("error preparing database: %w", err)
+	}
+
 	db, err := gorm.Open(sqlite.Open(w.DBPath), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("error opening database: %w", err)
 	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		return fmt.Errorf("error accessing database connection: %w", err)
+	}
+	defer sqlDB.Close()
 
 	if err := db.AutoMigrate(&ChunkRecord{}); err != nil {
 		return fmt.Errorf("error migrating database: %w", err)

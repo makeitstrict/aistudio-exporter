@@ -3,9 +3,13 @@ package exporter
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
+
+// maxInputSize limits untrusted exports so a single file cannot exhaust memory.
+const maxInputSize int64 = 64 << 20
 
 // Writer defines the interface for exporting chunks.
 type Writer interface {
@@ -23,9 +27,18 @@ func ExportChunks(inputPath string, writer Writer) error {
 }
 
 func readAndParse(inputPath string) (Root, error) {
-	data, err := os.ReadFile(inputPath)
+	file, err := os.Open(inputPath)
 	if err != nil {
 		return Root{}, fmt.Errorf("error reading input file: %w", err)
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(io.LimitReader(file, maxInputSize+1))
+	if err != nil {
+		return Root{}, fmt.Errorf("error reading input file: %w", err)
+	}
+	if int64(len(data)) > maxInputSize {
+		return Root{}, fmt.Errorf("input file exceeds maximum size of %d bytes", maxInputSize)
 	}
 
 	var root Root
